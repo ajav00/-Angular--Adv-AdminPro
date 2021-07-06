@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UsuarioService } from '../../services/usuario.service';
@@ -44,7 +44,8 @@ export class LoginComponent implements OnInit  {
 
   
 
-  constructor(private router: Router, private fb: FormBuilder, private usuarioService: UsuarioService) { }
+  constructor(private router: Router, private fb: FormBuilder, private usuarioService: UsuarioService,
+    private ngZone: NgZone) { }
 
 
    renderButton() {
@@ -61,30 +62,30 @@ export class LoginComponent implements OnInit  {
   }
 
 
-   startApp () {
-    gapi.load('auth2', () => {
-      // Retrieve the singleton for the GoogleAuth library and set up the client.
-      this.auth2 = gapi.auth2.init({
-        client_id: '466175616749-b1nfm6ted2j80pcaidhep4etknm665d7.apps.googleusercontent.com',
-        cookiepolicy: 'single_host_origin',
-      });
-      this.attachSignin(document.getElementById('my-signin2'));
-    });
+  async startApp () {
+    
+    this.auth2 = await this.usuarioService.googleInit();
+    
+    this.attachSignin(document.getElementById('my-signin2'));
   };
 
 
   attachSignin(element) {
-    console.log(element.id);
+    // console.log(element.id);
     this.auth2.attachClickHandler(element, {},
         (googleUser) => {  
             var id_token = googleUser.getAuthResponse().id_token;
             //console.log(id_token);
-            this.usuarioService.loginGoogle(id_token).subscribe(
-              resp => this.router.navigateByUrl('/')
-            );
+            this.usuarioService.loginGoogle(id_token)
+                .subscribe( resp =>{
+                  //Mover al dashboard
+                  this.ngZone.run(()=>{
+                    this.router.navigateByUrl('/')
+                  })
+                }
+                );
             
-            
-            //TODO: Mover al dash
+          
 
 
         }, (error) => {
