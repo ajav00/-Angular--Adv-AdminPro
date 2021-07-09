@@ -13,6 +13,8 @@ import { HospitalesComponent } from './mantenimiento/hospitales/hospitales.compo
 import { MedicosComponent } from './mantenimiento/medicos/medicos.component';
 import { MedicoComponent } from './mantenimiento/medicos/medico.component';
 import{AuthGuard} from '../guards/auth.guard'
+import { BusquedaComponent } from './busqueda/busqueda.component';
+import { AdminGuard } from '../guards/admin.guard';
 
 const routes: Routes = [
     { path: 'dashboard', 
@@ -20,18 +22,19 @@ const routes: Routes = [
       canActivate: [AuthGuard],
       children: [
         { path: '', component: DashboardComponent, data: {titulo: 'Dashboard'} },
+        { path: 'account-settings', component: AccountSettingsComponent, data: {titulo: 'Temas'} },
+        { path: 'buscar/:termino', component: BusquedaComponent, data: {titulo: 'Búsquedas'} },
         { path: 'progress', component: ProgressComponent, data: {titulo: 'Progress'} },
         { path: 'grafica1', component: Grafica1Component, data: {titulo: 'Gráfica 1'} },
         { path: 'promesas', component: PromesasComponent, data: {titulo: 'Promesas'} },
         { path: 'rxjs', component: RxjsComponent, data: {titulo: 'RxJs'} },
-        { path: 'account-settings', component: AccountSettingsComponent, data: {titulo: 'Temas'} },
         { path: 'profile', component: ProfileComponent, data: {titulo: 'Ajustes de Cuenta'} },
         
         //Mantenimientos
-        { path: 'usuarios', component: UsuariosComponent, data: {titulo: 'Mantenimiento de Usuarios'} },
+        { path: 'usuarios', canActivate:[ AdminGuard ], component: UsuariosComponent, data: {titulo: 'Mantenimiento de Usuarios'} },
         { path: 'hospitales', component: HospitalesComponent, data: {titulo: 'Mantenimiento de Hospitales'} },
         { path: 'medicos', component: MedicosComponent, data: {titulo: 'Mantenimiento de Médicos'} },
-        { path: 'medicos/medico/:id', component: MedicoComponent, data: {titulo: 'Mantenimiento de Médicos'} },
+        { path: 'medicos/medico/:id', canActivate:[ AdminGuard ], component: MedicoComponent, data: {titulo: 'Mantenimiento de Médicos'} },
       ] },
 
     //{ path: 'path/:routeParam', component: MyComponent },

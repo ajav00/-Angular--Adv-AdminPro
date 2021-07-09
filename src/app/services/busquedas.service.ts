@@ -44,6 +44,10 @@ export class BusquedasService {
 
     return resultado;
   }
+  busquedaGlobal(termino: string){
+    const url = `${base_url}/todo/${termino}`;
+    return this.http.get(url, this.headers);
+  }
 
   
 
