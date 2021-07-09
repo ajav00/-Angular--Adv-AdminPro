@@ -50,6 +50,7 @@ export class ModalImagenComponent implements OnInit {
   subirImagen(){
     const id = this.modalImagenService.id;
     const tipo = this.modalImagenService.tipo;
+    console.log({tipo, id});
 
     this.fileUploadService.actualizarFoto( this.imagenSubir, tipo, id )
     .then((img) => {
