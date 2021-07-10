@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  base_url: 'http://localhost:3005/api'    //Cambiarlo posteriormente
+  base_url: 'https://admin-angular-node.herokuapp.com/api'    //Cambiarlo posteriormente
 };
